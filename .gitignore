@@ -1,0 +1,14 @@
+# Ignore local cursor/state and agent data
+.cursor
+.agent-os
+
+# Node build artifacts
+node_modules/
+dist/
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+
