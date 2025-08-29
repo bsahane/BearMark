@@ -1,0 +1,473 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Unified Editor Styles */
+.unified-editor-container {
+  position: relative;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Transparent textarea for input */
+.unified-editor-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 1.5rem;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  color: transparent;
+  caret-color: #b91c1c; /* dark red */
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  letter-spacing: 0;
+  word-spacing: 0;
+  tab-size: 4;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  z-index: 10;
+  /* Ensure identical spacing and sizing */
+  box-sizing: border-box;
+  margin: 0;
+  vertical-align: top;
+  text-align: left;
+  direction: ltr;
+  font-weight: 400;
+  font-style: normal;
+  text-decoration: none;
+  text-transform: none;
+  text-indent: 0;
+  text-shadow: none;
+  /* Ensure perfect cursor alignment */
+  transform: translate3d(0, 0, 0); /* Force GPU acceleration */
+  backface-visibility: hidden;
+  /* Improve cursor visibility and precision */
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Rendered content overlay */
+.unified-editor-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 1.5rem;
+  pointer-events: none;
+  overflow: hidden; /* No scrolling on overlay */
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  letter-spacing: 0;
+  word-spacing: 0;
+  tab-size: 4;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: #44403c; /* warm-700 */
+  /* Ensure identical spacing and sizing */
+  box-sizing: border-box;
+  margin: 0;
+  vertical-align: top;
+  text-align: left;
+  direction: ltr;
+  font-weight: 400;
+  font-style: normal;
+  text-decoration: none;
+  text-transform: none;
+  text-indent: 0;
+  /* Ensure perfect cursor alignment */
+  transform: translate3d(0, 0, 0); /* Force GPU acceleration */
+  backface-visibility: hidden;
+}
+
+/* Placeholder styling */
+.unified-editor-input::placeholder {
+  color: #a8a29e; /* warm-400 */
+  font-style: italic;
+}
+
+/* Unified editor focus styles */
+.unified-editor-container:focus-within {
+  outline: none;
+}
+
+/* Markdown rendering styles for unified editor */
+.unified-editor-content h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #1c1917; /* warm-900 */
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+}
+
+.unified-editor-content h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #292524; /* warm-800 */
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+}
+
+.unified-editor-content h3 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #44403c; /* warm-700 */
+  margin-bottom: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.unified-editor-content h4,
+.unified-editor-content h5,
+.unified-editor-content h6 {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #57534e; /* warm-600 */
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* Bear-style list styling */
+.unified-editor-content .list-item {
+  display: flex;
+  align-items: flex-start;
+  margin-left: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.unified-editor-content .list-bullet {
+  color: #eba564; /* bear-500 */
+  margin-right: 0.5rem;
+  min-width: 1.5rem;
+}
+
+/* Code styling */
+.unified-editor-content code {
+  background-color: #f5f5f4; /* warm-100 */
+  color: #b16d2d; /* bear-700 */
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+}
+
+.unified-editor-content pre {
+  background-color: #f5f5f4; /* warm-100 */
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: 0.875rem;
+}
+
+/* Link styling */
+.unified-editor-content a {
+  color: #d1883f; /* bear-600 */
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.unified-editor-content a:hover {
+  color: #b16d2d; /* bear-700 */
+}
+
+/* Blockquote styling */
+.unified-editor-content blockquote {
+  border-left: 4px solid #f2c49b; /* bear-300 */
+  padding-left: 1rem;
+  font-style: italic;
+  color: #78716c; /* warm-500 */
+  margin: 0.5rem 0;
+}
+
+/* Horizontal rule */
+.unified-editor-content hr {
+  margin: 1rem 0;
+  border-color: #d6d3d1; /* warm-300 */
+}
+
+/* Selection styling */
+.unified-editor-input::selection {
+  background-color: #f2c49b; /* bear-300 */
+  color: #1c1917; /* warm-900 */
+}
+
+/* Smooth transitions */
+.unified-editor-content * {
+  transition: all 0.1s ease;
+}
+
+/* Custom styles for better Bear.app feel */
+.bear-editor {
+  font-feature-settings: 'liga', 'kern';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Focus ring for accessibility */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-bear-500 focus:ring-offset-2;
+}
+
+/* Animation classes */
+.fade-in {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .unified-editor-input,
+  .unified-editor-content {
+    padding: 1rem;
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+}
+
+/* Markdown Table Styling - Bear.app inspired */
+.markdown-table-wrapper {
+  margin: 1rem 0;
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #e7e5e4; /* warm-200 */
+  background: #fafaf9; /* warm-50 */
+}
+
+.markdown-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.markdown-table thead {
+  background: #f5f5f4; /* warm-100 */
+}
+
+.table-header {
+  padding: 12px 16px;
+  font-weight: 600;
+  color: #292524; /* warm-800 */
+  border-bottom: 2px solid #d6d3d1; /* warm-300 */
+  border-right: 1px solid #e7e5e4; /* warm-200 */
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.table-header:last-child {
+  border-right: none;
+}
+
+.table-cell {
+  padding: 12px 16px;
+  color: #44403c; /* warm-700 */
+  border-bottom: 1px solid #e7e5e4; /* warm-200 */
+  border-right: 1px solid #e7e5e4; /* warm-200 */
+  background: white;
+  transition: background-color 0.1s ease;
+}
+
+.table-cell:last-child {
+  border-right: none;
+}
+
+.markdown-table tbody tr:hover .table-cell {
+  background: #fef7ed; /* bear-50 */
+}
+
+.markdown-table tbody tr:last-child .table-cell {
+  border-bottom: none;
+}
+
+/* Table alignment classes */
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* Responsive table handling */
+@media (max-width: 768px) {
+  .markdown-table-wrapper {
+    margin: 0.5rem 0;
+  }
+  
+  .table-header,
+  .table-cell {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}
+
+/* Table creation helper styles */
+.table-template {
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  color: #a8a29e; /* warm-400 */
+  font-size: 14px;
+}
+
+/* Allow links to be clickable in overlay */
+.unified-editor-content a {
+  pointer-events: auto;
+  color: #d1883f; /* bear-600 */
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.1s ease;
+}
+
+.unified-editor-content a:hover {
+  color: #b16d2d; /* bear-700 */
+}
+
+/* Ensure tables are interactive */
+.unified-editor-content .markdown-table-wrapper {
+  pointer-events: auto;
+}
+
+/* Table syntax styling that preserves cursor alignment */
+.unified-editor-content span[class*="text-bear-400"],
+.unified-editor-content span[class*="text-red-500"],
+.unified-editor-content span[class*="text-red-700"] {
+  /* Ensure styled elements don't interfere with cursor positioning */
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  word-spacing: inherit;
+  font-weight: inherit;
+}
+
+/* Dark mode support (for future implementation) */
+@media (prefers-color-scheme: dark) {
+  /* Dark mode styles will be added here */
+}
+
+/* Smooth cursor blinking animation */
+@keyframes smooth-blink {
+  0%, 50% { caret-color: #b91c1c; }
+  51%, 100% { caret-color: transparent; }
+}
+
+.unified-editor-input:focus {
+  animation: smooth-blink 1.2s infinite;
+}
+
+/* Make specific elements clickable in the overlay */
+.unified-editor-content a,
+.unified-editor-content span[onclick],
+.unified-editor-content .cursor-pointer {
+  pointer-events: auto !important;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.unified-editor-content a {
+  color: #b91c1c !important; /* dark red */
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.unified-editor-content a:hover {
+  color: #991b1b !important; /* darker red on hover */
+  text-decoration-thickness: 2px;
+}
+
+.unified-editor-content span[onclick],
+.unified-editor-content .cursor-pointer {
+  color: #b91c1c !important; /* dark red for interactive elements */
+  cursor: pointer;
+}
+
+.unified-editor-content span[onclick]:hover,
+.unified-editor-content .cursor-pointer:hover {
+  color: #991b1b !important; /* darker red on hover */
+}
+
+/* Headers maintain same line height for cursor alignment - only change weight and color */
+.unified-editor-content .font-bold,
+.unified-editor-content .font-semibold,
+.unified-editor-content .font-medium {
+  /* Inherit the same font-size and line-height as the container */
+  font-size: inherit;
+  line-height: inherit;
+  /* Only visual styling differences */
+}
+
+/* Ensure consistent typography for cursor alignment */
+.unified-editor-content span {
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  word-spacing: inherit;
+}
+
+/* Simple horizontal rule styling for perfect cursor alignment */
+.unified-editor-content .horizontal-rule-inline {
+  display: inline;
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  word-spacing: inherit;
+  color: #a8a29e;
+}
+
+/* Add 10% margins on left and right */
+.unified-editor-input,
+.unified-editor-content {
+  padding-left: 10% !important;
+  padding-right: 10% !important;
+}

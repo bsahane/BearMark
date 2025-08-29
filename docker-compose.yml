@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  bearmark:
+    build: .
+    container_name: bearmark-app
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "com.bearmark.description=BearMark - Beautiful Markdown Editor"
+      - "com.bearmark.version=1.0.0"
+
+  # Optional: Development service for hot reload
+  bearmark-dev:
+    build: 
+      context: .
+      target: builder
+    container_name: bearmark-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
+    profiles:
+      - dev
+
+networks:
+  default:
+    name: bearmark-network

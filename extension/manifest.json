@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "BearMark - New Tab Markdown Editor",
+  "version": "1.0.0",
+  "description": "Beautiful markdown editor that replaces your new tab page. Write notes with Bear.app-like experience.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "contextMenus",
+    "commands",
+    "alarms"
+  ],
+  "chrome_url_overrides": {
+    "newtab": "newtab-vanilla.html"
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "BearMark",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; object-src 'self'"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["styles/*", "js/*", "icons/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

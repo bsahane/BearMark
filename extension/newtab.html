@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BearMark - New Tab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/compiled.css">
+    <script src="js/marked.min.js"></script>
+</head>
+<body class="h-full bg-warm-50 font-sans text-warm-900 antialiased" x-data="bearmarkApp()">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="bg-white border-r border-warm-200 flex flex-col transition-all duration-300" 
+             :class="sidebarCollapsed ? 'w-16' : 'w-80'">
+            <!-- Header -->
+            <div class="p-6 border-b border-warm-100">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-2">
+                        <!-- Sidebar Toggle -->
+                        <button 
+                            @click="sidebarCollapsed = !sidebarCollapsed"
+                            class="p-1 rounded-lg text-warm-600 hover:bg-warm-100 transition-colors"
+                            title="Toggle sidebar"
+                        >
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                        <h1 x-show="!sidebarCollapsed" class="text-xl font-semibold text-warm-900">BearMark</h1>
+                    </div>
+                    <button 
+                        x-show="!sidebarCollapsed"
+                        @click="createNewNote()"
+                        class="p-2 rounded-lg bg-bear-500 text-white hover:bg-bear-600 transition-colors"
+                        title="Create new note"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Search -->
+                <div x-show="!sidebarCollapsed" class="relative">
+                    <input 
+                        type="text" 
+                        placeholder="Search notes..."
+                        x-model="searchQuery"
+                        @input="searchNotes()"
+                        class="w-full pl-10 pr-4 py-2 bg-warm-50 border border-warm-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-bear-500 focus:border-transparent"
+                    >
+                    <svg class="w-5 h-5 text-warm-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+            </div>
+            
+            <!-- Notes List -->
+            <div x-show="!sidebarCollapsed" class="flex-1 overflow-y-auto">
+                <template x-for="note in filteredNotes" :key="note.id">
+                    <div 
+                        @click="selectNote(note)"
+                        :class="{'bg-bear-50 border-r-2 border-bear-500': selectedNote?.id === note.id}"
+                        class="p-4 border-b border-warm-100 cursor-pointer hover:bg-warm-50 transition-colors"
+                    >
+                        <h3 class="font-medium text-warm-900 mb-1 line-clamp-1" x-text="note.title || 'Untitled'"></h3>
+                        <p class="text-sm text-warm-600 line-clamp-2" x-text="note.content.substring(0, 100) + (note.content.length > 100 ? '...' : '')"></p>
+                        <p class="text-xs text-warm-400 mt-2" x-text="formatDate(note.updated_at)"></p>
+                    </div>
+                </template>
+                
+                <!-- Empty State -->
+                <div x-show="filteredNotes.length === 0 && !isLoading" class="p-8 text-center">
+                    <svg class="w-12 h-12 mx-auto mb-4 text-warm-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <p class="text-warm-500">No notes found</p>
+                    <button 
+                        @click="createNewNote()"
+                        class="mt-2 text-bear-600 hover:text-bear-700 text-sm font-medium"
+                    >
+                        Create your first note
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col">
+            <!-- Editor Header -->
+            <div class="bg-white border-b border-warm-200 px-6 py-4 flex items-center justify-between">
+                <div class="flex-1">
+                    <input 
+                        x-show="selectedNote"
+                        type="text"
+                        x-model="selectedNote.title"
+                        @input="saveNote()"
+                        placeholder="Note title..."
+                        class="text-lg font-medium bg-transparent border-none outline-none focus:ring-0 text-warm-900 placeholder-warm-400"
+                    >
+                    <span x-show="!selectedNote" class="text-lg font-medium text-warm-400">Select a note to edit</span>
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                    <!-- Export Button -->
+                    <button 
+                        x-show="selectedNote"
+                        @click="exportNote()"
+                        class="p-2 rounded-lg text-warm-600 hover:bg-warm-100 transition-colors"
+                        title="Export note"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </button>
+                    
+                    <!-- Delete Button -->
+                    <button 
+                        x-show="selectedNote"
+                        @click="deleteNote(selectedNote)"
+                        class="p-2 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+                        title="Delete note"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Unified Editor Content -->
+            <div class="flex-1 flex">
+                <!-- Single Unified Editor -->
+                <div class="flex-1 flex flex-col relative">
+                    <!-- Unified Markdown Editor -->
+                    <div 
+                        x-show="selectedNote"
+                        class="flex-1 unified-editor-container bear-editor bg-white"
+                    >
+                        <!-- Hidden textarea for actual content -->
+                        <textarea 
+                            x-model="selectedNote.content"
+                            @input="saveNote(); updateUnifiedEditor($event)"
+                            @keydown="handleEditorKeydown($event)"
+                            @scroll="syncScroll($event.target)"
+                            @click="handleEditorClick($event)"
+                            @focus="isEditorFocused = true"
+                            @blur="isEditorFocused = false"
+                            class="unified-editor-input"
+                            placeholder="Start writing your note..."
+                        ></textarea>
+                        
+                        <!-- Rendered content overlay -->
+                        <div 
+                            class="unified-editor-content"
+                            x-html="unifiedContent"
+                        ></div>
+                    </div>
+                    
+                    <!-- Welcome Message -->
+                    <div x-show="!selectedNote" class="flex-1 flex items-center justify-center bg-white">
+                        <div class="text-center max-w-md">
+                            <svg class="w-16 h-16 mx-auto mb-6 text-warm-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                            </svg>
+                            <h2 class="text-2xl font-semibold text-warm-700 mb-2">Welcome to BearMark</h2>
+                            <p class="text-warm-500 mb-6">Your markdown editor is now your new tab page! Create your first note to start writing.</p>
+                            <button 
+                                @click="createNewNote()"
+                                class="px-6 py-3 bg-bear-500 text-white rounded-lg hover:bg-bear-600 transition-colors font-medium"
+                            >
+                                Create Your First Note
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="js/storage.js"></script>
+    <script src="js/init.js"></script>
+    <script src="js/app.js"></script>
+    <!-- Alpine.js loaded after our app scripts -->
+    <script defer src="js/alpine.min.js"></script>
+</body>
+</html>

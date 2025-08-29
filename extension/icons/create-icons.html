@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate BearMark Icons</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        canvas { border: 1px solid #ccc; margin: 10px; }
+        .icon-set { margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>BearMark Extension Icons</h1>
+    <p>This page generates the extension icons. Right-click each canvas and save as PNG.</p>
+    
+    <div class="icon-set">
+        <h3>16x16 Icon</h3>
+        <canvas id="icon16" width="16" height="16"></canvas>
+    </div>
+    
+    <div class="icon-set">
+        <h3>32x32 Icon</h3>
+        <canvas id="icon32" width="32" height="32"></canvas>
+    </div>
+    
+    <div class="icon-set">
+        <h3>48x48 Icon</h3>
+        <canvas id="icon48" width="48" height="48"></canvas>
+    </div>
+    
+    <div class="icon-set">
+        <h3>128x128 Icon</h3>
+        <canvas id="icon128" width="128" height="128"></canvas>
+    </div>
+
+    <script>
+        function drawIcon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#f4a261');
+            gradient.addColorStop(1, '#e76f51');
+            
+            // Draw background circle
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size/2 - 1, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Draw markdown symbol (simplified)
+            ctx.fillStyle = 'white';
+            ctx.font = `${size * 0.4}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('M', size/2, size/2);
+            
+            // Add small accent
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.font = `${size * 0.2}px Arial`;
+            ctx.fillText('↓', size/2 + size * 0.1, size/2 + size * 0.15);
+        }
+        
+        // Generate all icons
+        drawIcon(document.getElementById('icon16'), 16);
+        drawIcon(document.getElementById('icon32'), 32);
+        drawIcon(document.getElementById('icon48'), 48);
+        drawIcon(document.getElementById('icon128'), 128);
+        
+        // Auto-download function (optional)
+        function downloadIcon(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+        
+        // Add download buttons
+        document.body.innerHTML += `
+            <div style="margin-top: 30px;">
+                <h3>Download Icons</h3>
+                <button onclick="downloadIcon('icon16', 'icon-16.png')">Download 16x16</button>
+                <button onclick="downloadIcon('icon32', 'icon-32.png')">Download 32x32</button>
+                <button onclick="downloadIcon('icon48', 'icon-48.png')">Download 48x48</button>
+                <button onclick="downloadIcon('icon128', 'icon-128.png')">Download 128x128</button>
+            </div>
+        `;
+    </script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BearMark Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #fafaf9;
+            color: #1c1917;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .sidebar {
+            background: white;
+            border: 1px solid #e7e5e4;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        .editor {
+            background: white;
+            border: 1px solid #e7e5e4;
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 300px;
+        }
+        button {
+            background: #eba564;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #d1883f;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            border: 1px solid #e7e5e4;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .debug {
+            background: #f5f5f4;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BearMark Extension Test</h1>
+        
+        <div class="debug" id="debug">
+            Debug info will appear here...
+        </div>
+        
+        <div x-data="testApp()" class="sidebar">
+            <h2>Test Controls</h2>
+            <button @click="testStorage()">Test Chrome Storage</button>
+            <button @click="createNote()">Create Test Note</button>
+            <button @click="toggleSidebar()">Toggle Sidebar: <span x-text="sidebarCollapsed ? 'Collapsed' : 'Expanded'"></span></button>
+            
+            <div x-show="!sidebarCollapsed" style="margin-top: 20px;">
+                <h3>Notes (<span x-text="notes.length"></span>)</h3>
+                <template x-for="note in notes" :key="note.id">
+                    <div style="padding: 10px; border: 1px solid #e7e5e4; margin: 5px 0; border-radius: 4px;">
+                        <strong x-text="note.title || 'Untitled'"></strong>
+                        <p x-text="note.content.substring(0, 50) + '...'"></p>
+                        <button @click="deleteNote(note)" style="background: #dc2626;">Delete</button>
+                    </div>
+                </template>
+            </div>
+        </div>
+        
+        <div class="editor">
+            <h2>Editor Test</h2>
+            <textarea placeholder="Type your markdown here..." x-model="testContent" @input="log('Content changed: ' + $event.target.value.length + ' chars')"></textarea>
+            <p>Content length: <span x-text="testContent.length"></span></p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/storage.js"></script>
+    <script>
+        // Debug logging
+        function log(message) {
+            console.log(message);
+            const debug = document.getElementById('debug');
+            debug.innerHTML += new Date().toLocaleTimeString() + ': ' + message + '<br>';
+            debug.scrollTop = debug.scrollHeight;
+        }
+
+        // Test app data
+        function testApp() {
+            log('testApp() called');
+            return {
+                notes: [],
+                sidebarCollapsed: false,
+                testContent: '# Hello BearMark\n\nThis is a test note.',
+                
+                async init() {
+                    log('Initializing test app...');
+                    try {
+                        // Initialize storage
+                        window.bearmarkDB = new ChromeStorageDB();
+                        await window.bearmarkDB.init();
+                        log('Storage initialized successfully');
+                        
+                        // Load notes
+                        await this.loadNotes();
+                        log('Notes loaded: ' + this.notes.length);
+                    } catch (error) {
+                        log('Error initializing: ' + error.message);
+                    }
+                },
+                
+                async loadNotes() {
+                    try {
+                        this.notes = await window.bearmarkDB.getAllNotes();
+                        log('Loaded ' + this.notes.length + ' notes');
+                    } catch (error) {
+                        log('Error loading notes: ' + error.message);
+                        this.notes = [];
+                    }
+                },
+                
+                async createNote() {
+                    log('Creating new note...');
+                    try {
+                        const note = {
+                            title: 'Test Note ' + Date.now(),
+                            content: '# Test Note\n\nThis is a test note created at ' + new Date().toLocaleString(),
+                            tags: ['test']
+                        };
+                        
+                        const created = await window.bearmarkDB.createNote(note);
+                        log('Created note: ' + created.id);
+                        await this.loadNotes();
+                    } catch (error) {
+                        log('Error creating note: ' + error.message);
+                    }
+                },
+                
+                async deleteNote(note) {
+                    log('Deleting note: ' + note.id);
+                    try {
+                        await window.bearmarkDB.deleteNote(note.id);
+                        log('Deleted note: ' + note.id);
+                        await this.loadNotes();
+                    } catch (error) {
+                        log('Error deleting note: ' + error.message);
+                    }
+                },
+                
+                toggleSidebar() {
+                    this.sidebarCollapsed = !this.sidebarCollapsed;
+                    log('Sidebar toggled: ' + (this.sidebarCollapsed ? 'collapsed' : 'expanded'));
+                },
+                
+                async testStorage() {
+                    log('Testing storage...');
+                    try {
+                        // Test if chrome.storage is available
+                        if (typeof chrome !== 'undefined' && chrome.storage) {
+                            log('Chrome storage API available');
+                            
+                            // Test write/read
+                            await chrome.storage.local.set({test: 'Hello World'});
+                            const result = await chrome.storage.local.get(['test']);
+                            log('Storage test result: ' + result.test);
+                        } else {
+                            log('Chrome storage API NOT available');
+                        }
+                    } catch (error) {
+                        log('Storage test error: ' + error.message);
+                    }
+                }
+            };
+        }
+
+        // Initialize when DOM loads
+        document.addEventListener('DOMContentLoaded', function() {
+            log('DOM loaded');
+        });
+
+        // Log Alpine.js events
+        document.addEventListener('alpine:init', () => {
+            log('Alpine.js initialized');
+        });
+        
+        document.addEventListener('alpine:initialized', () => {
+            log('Alpine.js fully initialized');
+        });
+    </script>
+    <script defer src="js/alpine.min.js"></script>
+</body>
+</html>
