@@ -30,15 +30,89 @@
                         </button>
                         <h1 id="sidebar-title" class="text-xl font-semibold text-warm-900">BearMark</h1>
                     </div>
-                    <button 
-                        id="new-note-btn"
-                        class="p-2 rounded-lg bg-red-700 text-white hover:bg-red-800 transition-colors"
-                        title="Create new note"
-                    >
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                    </button>
+                    <!-- New Note with Templates -->
+                    <div class="relative">
+                        <button 
+                            id="new-note-btn"
+                            class="p-2 rounded-lg bg-red-700 text-white hover:bg-red-800 transition-colors"
+                            title="Create new note"
+                        >
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        </button>
+                        
+                        <!-- Templates Dropdown -->
+                        <div 
+                            id="templates-menu"
+                            class="absolute left-0 top-full mt-1 bg-white border border-warm-200 rounded-lg shadow-lg z-10 min-w-[200px]"
+                            style="display: none;"
+                        >
+                            <div class="p-2 border-b border-warm-100">
+                                <span class="text-xs font-semibold text-warm-600">Quick Templates</span>
+                            </div>
+                            
+                            <button 
+                                id="template-blank"
+                                class="w-full text-left px-3 py-2 text-sm text-warm-700 hover:bg-warm-50 flex items-center space-x-2"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                <span>Blank Note</span>
+                            </button>
+                            
+                            <button 
+                                id="template-meeting"
+                                class="w-full text-left px-3 py-2 text-sm text-warm-700 hover:bg-warm-50 flex items-center space-x-2"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                                <span>Meeting Notes</span>
+                            </button>
+                            
+                            <button 
+                                id="template-daily"
+                                class="w-full text-left px-3 py-2 text-sm text-warm-700 hover:bg-warm-50 flex items-center space-x-2"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                <span>Daily Journal</span>
+                            </button>
+                            
+                            <button 
+                                id="template-todo"
+                                class="w-full text-left px-3 py-2 text-sm text-warm-700 hover:bg-warm-50 flex items-center space-x-2"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                                </svg>
+                                <span>Todo List</span>
+                            </button>
+                            
+                            <button 
+                                id="template-project"
+                                class="w-full text-left px-3 py-2 text-sm text-warm-700 hover:bg-warm-50 flex items-center space-x-2"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                                </svg>
+                                <span>Project Planning</span>
+                            </button>
+                            
+                            <button 
+                                id="template-ideas"
+                                class="w-full text-left px-3 py-2 text-sm text-warm-700 hover:bg-warm-50 rounded-b-lg flex items-center space-x-2"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                </svg>
+                                <span>Ideas & Brainstorm</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Search -->
@@ -47,11 +121,100 @@
                         type="text" 
                         placeholder="Search notes..."
                         id="search-input"
-                        class="w-full pl-10 pr-4 py-2 bg-warm-50 border border-warm-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-transparent"
+                        class="w-full pl-10 pr-10 py-2 bg-warm-50 border border-warm-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-transparent"
                     >
                     <svg class="w-5 h-5 text-warm-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
+                    <!-- Advanced Search Toggle -->
+                    <button 
+                        id="advanced-search-toggle"
+                        class="absolute right-3 top-2.5 text-warm-400 hover:text-red-700 transition-colors"
+                        title="Advanced search"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Advanced Search Panel -->
+                <div id="advanced-search-panel" class="mt-3 p-4 bg-warm-50 border border-warm-200 rounded-lg" style="display: none;">
+                    <!-- Search Filters -->
+                    <div class="space-y-4">
+                        <!-- Date Range Filter -->
+                        <div>
+                            <label class="block text-xs font-medium text-warm-600 mb-2">Date Range</label>
+                            <div class="flex space-x-2">
+                                <select id="date-filter" class="text-xs border border-warm-300 rounded px-2 py-1 bg-white">
+                                    <option value="">Any time</option>
+                                    <option value="today">Today</option>
+                                    <option value="week">This week</option>
+                                    <option value="month">This month</option>
+                                    <option value="year">This year</option>
+                                    <option value="custom">Custom range</option>
+                                </select>
+                            </div>
+                            <!-- Custom Date Range -->
+                            <div id="custom-date-range" class="mt-2 flex space-x-2" style="display: none;">
+                                <input type="date" id="date-from" class="text-xs border border-warm-300 rounded px-2 py-1 bg-white flex-1">
+                                <input type="date" id="date-to" class="text-xs border border-warm-300 rounded px-2 py-1 bg-white flex-1">
+                            </div>
+                        </div>
+                        
+                        <!-- Tag Filter -->
+                        <div>
+                            <label class="block text-xs font-medium text-warm-600 mb-2">Tags</label>
+                            <div class="flex flex-wrap gap-1" id="available-tags">
+                                <!-- Tags will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Content Type Filter -->
+                        <div>
+                            <label class="block text-xs font-medium text-warm-600 mb-2">Content Type</label>
+                            <div class="flex flex-wrap gap-2">
+                                <label class="inline-flex items-center">
+                                    <input type="checkbox" id="filter-has-links" class="text-red-700 rounded focus:ring-red-700">
+                                    <span class="ml-1 text-xs text-warm-600">Has links</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="checkbox" id="filter-has-checkboxes" class="text-red-700 rounded focus:ring-red-700">
+                                    <span class="ml-1 text-xs text-warm-600">Has tasks</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Saved Searches -->
+                        <div>
+                            <label class="block text-xs font-medium text-warm-600 mb-2">Saved Searches</label>
+                            <div class="flex items-center space-x-2">
+                                <select id="saved-searches" class="text-xs border border-warm-300 rounded px-2 py-1 bg-white flex-1">
+                                    <option value="">Select saved search...</option>
+                                </select>
+                                <button 
+                                    id="save-current-search"
+                                    class="px-2 py-1 text-xs bg-red-700 text-white rounded hover:bg-red-800 transition-colors"
+                                    title="Save current search"
+                                >
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Search Actions -->
+                        <div class="flex justify-between pt-2 border-t border-warm-200">
+                            <button 
+                                id="clear-all-filters"
+                                class="px-3 py-1 text-xs text-warm-600 hover:text-warm-800 transition-colors"
+                            >
+                                Clear all
+                            </button>
+                            <span id="search-results-count" class="text-xs text-warm-500">
+                                <!-- Results count will show here -->
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -77,6 +240,19 @@
                 </div>
                 
                 <div class="flex items-center space-x-2">
+                    <!-- Focus Mode Button -->
+                    <button 
+                        id="focus-mode-btn"
+                        class="p-2 rounded-lg text-red-700 hover:bg-red-50 transition-colors"
+                        title="Focus mode (F11)"
+                        style="display: none;"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                    </button>
+                    
                     <!-- Settings Button -->
                     <button 
                         id="settings-btn"
@@ -89,17 +265,54 @@
                         </svg>
                     </button>
                     
-                    <!-- Export Button -->
-                    <button 
-                        id="export-btn"
-                        class="p-2 rounded-lg text-red-700 hover:bg-red-50 transition-colors"
-                        title="Export note"
-                        style="display: none;"
-                    >
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
-                        </svg>
-                    </button>
+                    <!-- Export Menu -->
+                    <div class="relative">
+                        <button 
+                            id="export-btn"
+                            class="p-2 rounded-lg text-red-700 hover:bg-red-50 transition-colors"
+                            title="Export options"
+                            style="display: none;"
+                        >
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </button>
+                        
+                        <!-- Export Menu Dropdown -->
+                        <div 
+                            id="export-menu"
+                            class="absolute right-0 top-full mt-1 bg-white border border-warm-200 rounded-lg shadow-lg z-10 min-w-[160px]"
+                            style="display: none;"
+                        >
+                            <button 
+                                id="export-markdown"
+                                class="w-full text-left px-4 py-2 text-sm text-warm-700 hover:bg-warm-50 rounded-t-lg flex items-center space-x-2"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                <span>Export as Markdown</span>
+                            </button>
+                            <button 
+                                id="export-html"
+                                class="w-full text-left px-4 py-2 text-sm text-warm-700 hover:bg-warm-50 flex items-center space-x-2"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                                </svg>
+                                <span>Export as HTML</span>
+                            </button>
+                            <button 
+                                id="export-json"
+                                class="w-full text-left px-4 py-2 text-sm text-warm-700 hover:bg-warm-50 rounded-b-lg flex items-center space-x-2"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"></path>
+                                </svg>
+                                <span>Export as JSON</span>
+                            </button>
+                        </div>
+                    </div>
                     
                     <!-- Delete Button -->
                     <button 
@@ -194,6 +407,170 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Focus Mode Overlay -->
+        <div id="focus-mode-overlay" class="fixed inset-0 bg-warm-50 z-40 focus-mode-hidden">
+            <!-- Focus Mode Header -->
+            <div class="flex justify-between items-center p-6 bg-white border-b border-warm-200">
+                <div class="flex items-center space-x-4">
+                    <h2 class="text-xl font-semibold text-warm-900">Focus Mode</h2>
+                    <div class="text-sm text-warm-500">
+                        <span id="focus-word-count">0 words</span> | 
+                        <span id="focus-char-count">0 characters</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <!-- Word Goal -->
+                    <div class="flex items-center space-x-2">
+                        <label class="text-sm text-warm-600">Goal:</label>
+                        <input 
+                            type="number" 
+                            id="focus-word-goal" 
+                            placeholder="500"
+                            class="w-16 px-2 py-1 text-sm border border-warm-300 rounded focus:outline-none focus:ring-2 focus:ring-red-700"
+                        >
+                        <span class="text-sm text-warm-500">words</span>
+                    </div>
+                    
+                    <!-- Progress Bar -->
+                    <div class="w-32 h-2 bg-warm-200 rounded-full overflow-hidden">
+                        <div 
+                            id="focus-progress-bar"
+                            class="h-full bg-red-700 transition-all duration-300"
+                            style="width: 0%"
+                        ></div>
+                    </div>
+                    
+                    <!-- Exit Focus Mode -->
+                    <button 
+                        id="exit-focus-mode"
+                        class="px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors text-sm"
+                    >
+                        Exit Focus (Esc)
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Focus Mode Editor -->
+            <div class="flex-1 flex items-center justify-center p-8">
+                <div class="w-full max-w-4xl">
+                    <div 
+                        id="focus-editor"
+                        class="unified-editor-container bear-editor bg-white rounded-lg shadow-lg min-h-[600px]"
+                    >
+                        <!-- Hidden textarea for actual content -->
+                        <textarea 
+                            id="focus-editor-textarea"
+                            class="unified-editor-input"
+                            placeholder="Start writing in focus mode..."
+                        ></textarea>
+                        
+                        <!-- Rendered content overlay -->
+                        <div 
+                            id="focus-editor-content"
+                            class="unified-editor-content"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Capture Modal -->
+        <div id="quick-capture-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;">
+            <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4">
+                <!-- Quick Capture Header -->
+                <div class="p-4 border-b border-warm-200">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-lg font-semibold text-warm-900">Quick Capture</h2>
+                            <p class="text-sm text-warm-500">Capture your thoughts instantly (Ctrl+Shift+N)</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <!-- Template Selector for Quick Capture -->
+                            <select id="quick-capture-template" class="text-sm border border-warm-300 rounded px-2 py-1 bg-white">
+                                <option value="blank">Quick Note</option>
+                                <option value="todo">Todo Item</option>
+                                <option value="idea">Idea</option>
+                                <option value="meeting">Meeting Note</option>
+                            </select>
+                            
+                            <button 
+                                id="close-quick-capture"
+                                class="p-1 rounded-lg text-warm-600 hover:bg-warm-100 transition-colors"
+                                title="Close (Escape)"
+                            >
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Capture Editor -->
+                <div class="p-4">
+                    <div class="space-y-4">
+                        <!-- Quick Title -->
+                        <input 
+                            type="text" 
+                            id="quick-capture-title"
+                            placeholder="Quick title... (optional)"
+                            class="w-full px-3 py-2 border border-warm-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-transparent"
+                        >
+                        
+                        <!-- Quick Content -->
+                        <div class="relative">
+                            <textarea 
+                                id="quick-capture-content"
+                                placeholder="What's on your mind? Start typing your thoughts here..."
+                                class="w-full px-3 py-3 border border-warm-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-transparent resize-none"
+                                rows="8"
+                            ></textarea>
+                            
+                            <!-- Word Count -->
+                            <div class="absolute bottom-3 right-3 text-xs text-warm-400" id="quick-capture-count">
+                                0 words
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Tags -->
+                        <div>
+                            <input 
+                                type="text" 
+                                id="quick-capture-tags"
+                                placeholder="Tags: #work #ideas #personal (optional)"
+                                class="w-full px-3 py-2 border border-warm-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-transparent text-sm"
+                            >
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Capture Actions -->
+                <div class="p-4 border-t border-warm-200 flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" id="quick-capture-close-after" class="text-red-700 rounded focus:ring-red-700" checked>
+                            <span class="ml-2 text-sm text-warm-600">Close after saving</span>
+                        </label>
+                    </div>
+                    
+                    <div class="flex items-center space-x-3">
+                        <button 
+                            id="quick-capture-save-continue"
+                            class="px-4 py-2 text-red-700 border border-red-700 rounded-lg hover:bg-red-50 transition-colors text-sm font-medium"
+                        >
+                            Save & Continue
+                        </button>
+                        <button 
+                            id="quick-capture-save"
+                            class="px-6 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors text-sm font-medium"
+                        >
+                            Save Note
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     
     <!-- Settings Modal -->
@@ -248,6 +625,111 @@
                     </div>
                 </div>
                 
+                <!-- Appearance Settings -->
+                <div>
+                    <h3 class="text-lg font-medium text-warm-900 mb-3">Appearance</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <label class="text-sm font-medium text-warm-700">Dark Mode</label>
+                                <p class="text-xs text-warm-500">Switch between light and dark themes</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="dark-mode-enabled" class="sr-only peer">
+                                <div class="w-11 h-6 bg-warm-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-warm-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-700"></div>
+                            </label>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <label class="block text-xs font-medium text-warm-600 mb-2">Color Scheme</label>
+                            <select id="color-scheme" class="w-full text-sm border border-warm-300 rounded px-3 py-2 bg-white">
+                                <option value="warm">Warm (Default)</option>
+                                <option value="cool">Cool Blue</option>
+                                <option value="forest">Forest Green</option>
+                                <option value="sunset">Sunset Orange</option>
+                                <option value="purple">Purple</option>
+                                <option value="high-contrast">High Contrast</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <label class="block text-xs font-medium text-warm-600 mb-2">Accent Color</label>
+                            <div class="flex items-center space-x-2">
+                                <input 
+                                    type="color" 
+                                    id="custom-accent-color" 
+                                    value="#dc2626" 
+                                    class="w-8 h-8 rounded border border-warm-300 cursor-pointer"
+                                >
+                                <span class="text-xs text-warm-500">Custom accent color</span>
+                                <button 
+                                    id="reset-accent-color"
+                                    class="px-2 py-1 text-xs text-warm-600 hover:text-red-700 transition-colors"
+                                >
+                                    Reset
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Typography Settings -->
+                <div>
+                    <h3 class="text-lg font-medium text-warm-900 mb-3">Typography</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-medium text-warm-600 mb-2">Font Family</label>
+                            <select id="font-family" class="w-full text-sm border border-warm-300 rounded px-3 py-2 bg-white">
+                                <option value="Inter">Inter (Default)</option>
+                                <option value="system-ui">System UI</option>
+                                <option value="Georgia, serif">Georgia</option>
+                                <option value="'Times New Roman', serif">Times New Roman</option>
+                                <option value="'Courier New', monospace">Courier New</option>
+                                <option value="'SF Pro Text', -apple-system">SF Pro (Apple)</option>
+                                <option value="'Segoe UI', sans-serif">Segoe UI (Windows)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="flex space-x-4">
+                            <div class="flex-1">
+                                <label class="block text-xs font-medium text-warm-600 mb-2">Font Size</label>
+                                <select id="font-size" class="w-full text-sm border border-warm-300 rounded px-3 py-2 bg-white">
+                                    <option value="14">Small (14px)</option>
+                                    <option value="16" selected>Medium (16px)</option>
+                                    <option value="18">Large (18px)</option>
+                                    <option value="20">Extra Large (20px)</option>
+                                    <option value="22">Huge (22px)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="flex-1">
+                                <label class="block text-xs font-medium text-warm-600 mb-2">Line Height</label>
+                                <select id="line-height" class="w-full text-sm border border-warm-300 rounded px-3 py-2 bg-white">
+                                    <option value="1.4">Tight (1.4)</option>
+                                    <option value="1.6" selected>Normal (1.6)</option>
+                                    <option value="1.8">Relaxed (1.8)</option>
+                                    <option value="2.0">Loose (2.0)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs font-medium text-warm-600 mb-2">Writing Width</label>
+                            <div class="flex items-center space-x-4">
+                                <input 
+                                    type="range" 
+                                    id="content-width" 
+                                    min="600" 
+                                    max="1200" 
+                                    value="800" 
+                                    class="flex-1"
+                                >
+                                <span class="text-xs text-warm-500 w-16" id="content-width-value">800px</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- Editor Settings -->
                 <div>
                     <h3 class="text-lg font-medium text-warm-900 mb-3">Editor</h3>
@@ -272,6 +754,59 @@
                                 <input type="checkbox" id="blur-enabled" class="sr-only peer" checked>
                                 <div class="w-11 h-6 bg-warm-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-warm-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-700"></div>
                             </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Import/Export Settings -->
+                <div>
+                    <h3 class="text-lg font-medium text-warm-900 mb-3">Data Management</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-sm font-medium text-warm-700 mb-2 block">Export All Notes</label>
+                            <p class="text-xs text-warm-500 mb-3">Download all your notes as backup files</p>
+                            <div class="flex space-x-2">
+                                <button 
+                                    id="export-all-json"
+                                    class="px-3 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors text-xs font-medium flex items-center space-x-1"
+                                >
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3"></path>
+                                    </svg>
+                                    <span>JSON Backup</span>
+                                </button>
+                                <button 
+                                    id="export-all-markdown"
+                                    class="px-3 py-2 border border-red-700 text-red-700 rounded-lg hover:bg-red-50 transition-colors text-xs font-medium flex items-center space-x-1"
+                                >
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3"></path>
+                                    </svg>
+                                    <span>Markdown Archive</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-warm-100 pt-3">
+                            <label class="text-sm font-medium text-warm-700 mb-2 block">Import Notes</label>
+                            <p class="text-xs text-warm-500 mb-3">Restore notes from backup files</p>
+                            <div class="space-y-2">
+                                <input 
+                                    type="file" 
+                                    id="import-file-input" 
+                                    accept=".json,.md,.markdown,.txt" 
+                                    class="hidden"
+                                >
+                                <button 
+                                    id="import-notes-btn"
+                                    class="w-full px-4 py-2 border border-warm-300 text-warm-700 rounded-lg hover:bg-warm-50 transition-colors text-sm font-medium flex items-center justify-center space-x-2"
+                                >
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+                                    </svg>
+                                    <span>Choose File to Import</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
