@@ -257,6 +257,17 @@
   }
 }
 
+/* Blur effect for privacy/focus */
+.blurred-content {
+  filter: blur(3px);
+  transition: filter 0.3s ease;
+}
+
+.blurred-input {
+  filter: blur(3px);
+  transition: filter 0.3s ease;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .unified-editor-input,

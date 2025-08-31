@@ -56,6 +56,7 @@ required_files=(
     "extension/popup.js"
     "extension/js/vanilla-app.js"
     "extension/js/storage.js"
+    "extension/js/calendar.js"
     "extension/js/marked.min.js"
     "extension/styles/compiled.css"
 )

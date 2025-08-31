@@ -21,7 +21,7 @@
                         <!-- Sidebar Toggle -->
                         <button 
                             id="sidebar-toggle"
-                            class="p-1 rounded-lg text-warm-600 hover:bg-warm-100 transition-colors"
+                            class="p-1 rounded-lg text-red-700 hover:bg-red-50 transition-colors"
                             title="Toggle sidebar"
                         >
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -32,7 +32,7 @@
                     </div>
                     <button 
                         id="new-note-btn"
-                        class="p-2 rounded-lg bg-bear-500 text-white hover:bg-bear-600 transition-colors"
+                        class="p-2 rounded-lg bg-red-700 text-white hover:bg-red-800 transition-colors"
                         title="Create new note"
                     >
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -47,7 +47,7 @@
                         type="text" 
                         placeholder="Search notes..."
                         id="search-input"
-                        class="w-full pl-10 pr-4 py-2 bg-warm-50 border border-warm-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-bear-500 focus:border-transparent"
+                        class="w-full pl-10 pr-4 py-2 bg-warm-50 border border-warm-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-transparent"
                     >
                     <svg class="w-5 h-5 text-warm-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -77,10 +77,22 @@
                 </div>
                 
                 <div class="flex items-center space-x-2">
+                    <!-- Settings Button -->
+                    <button 
+                        id="settings-btn"
+                        class="p-2 rounded-lg text-red-700 hover:bg-red-50 transition-colors"
+                        title="Settings"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                    </button>
+                    
                     <!-- Export Button -->
                     <button 
                         id="export-btn"
-                        class="p-2 rounded-lg text-warm-600 hover:bg-warm-100 transition-colors"
+                        class="p-2 rounded-lg text-red-700 hover:bg-red-50 transition-colors"
                         title="Export note"
                         style="display: none;"
                     >
@@ -92,7 +104,7 @@
                     <!-- Delete Button -->
                     <button 
                         id="delete-btn"
-                        class="p-2 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+                        class="p-2 rounded-lg text-red-700 hover:bg-red-100 transition-colors"
                         title="Delete note"
                         style="display: none;"
                     >
@@ -137,7 +149,7 @@
                             <p class="text-warm-500 mb-6">Your markdown editor is now your new tab page! Create your first note to start writing.</p>
                             <button 
                                 id="welcome-create-btn"
-                                class="px-6 py-3 bg-bear-500 text-white rounded-lg hover:bg-bear-600 transition-colors font-medium"
+                                class="px-6 py-3 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors font-medium"
                             >
                                 Create Your First Note
                             </button>
@@ -146,10 +158,146 @@
                 </div>
             </div>
         </div>
+
+        <!-- Calendar Sidebar -->
+        <div id="calendar-sidebar" class="bg-white border-l border-warm-200 flex flex-col transition-all duration-300 w-80">
+            <!-- Calendar Header -->
+            <div class="p-6 border-b border-warm-100">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-semibold text-warm-900">Today's Events</h2>
+                    <button 
+                        id="calendar-sidebar-toggle"
+                        class="p-1 rounded-lg text-red-700 hover:bg-red-50 transition-colors"
+                        title="Hide calendar"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Google Auth Status -->
+                <div id="auth-status" class="mb-4">
+                    <button 
+                        id="auth-btn"
+                        class="w-full px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors font-medium"
+                    >
+                        Connect Google Calendar
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Calendar Events List -->
+            <div id="calendar-events" class="flex-1 overflow-y-auto p-4">
+                <div class="text-center text-warm-500 mt-8">
+                    Connect your Google Calendar to see today's events
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+            <!-- Settings Header -->
+            <div class="p-6 border-b border-warm-200">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-semibold text-warm-900">Settings</h2>
+                    <button 
+                        id="settings-close"
+                        class="p-1 rounded-lg text-warm-600 hover:bg-warm-100 transition-colors"
+                        title="Close settings"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Settings Content -->
+            <div class="p-6 space-y-6">
+                <!-- Calendar Settings -->
+                <div>
+                    <h3 class="text-lg font-medium text-warm-900 mb-3">Calendar</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <label class="text-sm font-medium text-warm-700">Show Calendar Sidebar</label>
+                                <p class="text-xs text-warm-500">Display today's events in the right sidebar</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="calendar-enabled" class="sr-only peer">
+                                <div class="w-11 h-6 bg-warm-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-warm-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-700"></div>
+                            </label>
+                        </div>
+                        
+                        <div id="calendar-connect-section" class="border-t border-warm-100 pt-3" style="display: none;">
+                            <div class="space-y-2">
+                                <div id="calendar-auth-status" class="text-sm text-warm-600">
+                                    <span>📅 Calendar: Not connected</span>
+                                </div>
+                                <button 
+                                    id="calendar-connect-btn"
+                                    class="w-full px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors font-medium text-sm"
+                                >
+                                    Connect Calendar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Editor Settings -->
+                <div>
+                    <h3 class="text-lg font-medium text-warm-900 mb-3">Editor</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <label class="text-sm font-medium text-warm-700">Auto-Save</label>
+                                <p class="text-xs text-warm-500">Automatically save notes while typing</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="auto-save-enabled" class="sr-only peer" checked>
+                                <div class="w-11 h-6 bg-warm-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-warm-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-700"></div>
+                            </label>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <label class="text-sm font-medium text-warm-700">Blur Content</label>
+                                <p class="text-xs text-warm-500">Blur content when not focused for privacy</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="blur-enabled" class="sr-only peer" checked>
+                                <div class="w-11 h-6 bg-warm-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-warm-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-700"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Settings Footer -->
+            <div class="p-6 border-t border-warm-200 flex justify-end space-x-3">
+                <button 
+                    id="settings-reset"
+                    class="px-4 py-2 text-warm-600 hover:text-warm-700 text-sm font-medium"
+                >
+                    Reset to Defaults
+                </button>
+                <button 
+                    id="settings-save"
+                    class="px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors font-medium text-sm"
+                >
+                    Save Settings
+                </button>
+            </div>
+        </div>
     </div>
     
     <!-- Scripts -->
     <script src="js/storage.js"></script>
+    <script src="js/calendar.js"></script>
     <script src="js/vanilla-app.js"></script>
 </body>
 </html>

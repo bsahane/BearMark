@@ -6,8 +6,16 @@ class BearMarkApp {
         this.selectedNote = null;
         this.searchQuery = '';
         this.sidebarCollapsed = false;
+        this.calendarSidebarVisible = false; // Hide calendar by default
         this.isLoading = true;
         this.autoSaveTimer = null;
+        this.calendarEvents = [];
+        this.settingsModalVisible = false;
+        this.settings = {
+            calendarEnabled: false,
+            autoSaveEnabled: true,
+            blurEnabled: true
+        };
         
         // Bind methods
         this.init = this.init.bind(this);
@@ -27,6 +35,9 @@ class BearMarkApp {
                 console.log('💾 Database found, loading notes...');
                 await this.loadNotes();
                 console.log('📝 Notes loaded:', this.notes.length);
+                
+                // Load saved settings including sidebar state
+                await this.loadSettings();
             } else {
                 console.error('❌ Database not found!');
             }
@@ -38,6 +49,11 @@ class BearMarkApp {
             
             // Setup event listeners
             this.setupEventListeners();
+            
+            // Apply initial blur effect
+            setTimeout(() => {
+                this.addBlur();
+            }, 100);
             
             console.log('🎉 BearMark initialized successfully');
         } catch (error) {
@@ -59,6 +75,51 @@ class BearMarkApp {
             console.error('Error loading notes:', error);
             this.notes = [];
             this.filteredNotes = [];
+        }
+    }
+
+    async loadSettings() {
+        try {
+            const savedSettings = await window.bearmarkDB.getSettings();
+            console.log('📋 Loaded settings:', savedSettings);
+            
+            // Apply saved sidebar state
+            if (savedSettings.sidebarCollapsed !== undefined) {
+                this.sidebarCollapsed = savedSettings.sidebarCollapsed;
+                console.log('🔧 Restored sidebar state:', this.sidebarCollapsed);
+            }
+            
+            // Apply saved settings
+            if (savedSettings.calendarEnabled !== undefined) {
+                this.settings.calendarEnabled = savedSettings.calendarEnabled;
+                this.calendarSidebarVisible = savedSettings.calendarEnabled;
+                console.log('📅 Restored calendar enabled state:', this.settings.calendarEnabled);
+            }
+            
+            if (savedSettings.autoSaveEnabled !== undefined) {
+                this.settings.autoSaveEnabled = savedSettings.autoSaveEnabled;
+            }
+            
+            if (savedSettings.blurEnabled !== undefined) {
+                this.settings.blurEnabled = savedSettings.blurEnabled;
+            }
+        } catch (error) {
+            console.error('Error loading settings:', error);
+        }
+    }
+
+    async saveSettings() {
+        try {
+            const settingsToSave = {
+                sidebarCollapsed: this.sidebarCollapsed,
+                calendarEnabled: this.settings.calendarEnabled,
+                autoSaveEnabled: this.settings.autoSaveEnabled,
+                blurEnabled: this.settings.blurEnabled
+            };
+            await window.bearmarkDB.updateSettings(settingsToSave);
+            console.log('💾 Settings saved:', settingsToSave);
+        } catch (error) {
+            console.error('Error saving settings:', error);
         }
     }
 
@@ -176,6 +237,12 @@ class BearMarkApp {
 
     toggleSidebar() {
         this.sidebarCollapsed = !this.sidebarCollapsed;
+        this.applySidebarState();
+        // Save the new state to Chrome storage
+        this.saveSettings();
+    }
+
+    applySidebarState() {
         const sidebar = document.getElementById('sidebar');
         const title = document.getElementById('sidebar-title');
         const searchContainer = document.getElementById('search-container');
@@ -183,13 +250,21 @@ class BearMarkApp {
         const newNoteBtn = document.getElementById('new-note-btn');
         
         if (this.sidebarCollapsed) {
-            sidebar.className = sidebar.className.replace('w-80', 'w-16');
+            // Collapsed state - hide border and show only icon
+            sidebar.className = sidebar.className
+                .replace('w-80', 'w-16')
+                .replace('border-r', '')
+                .replace('border-warm-200', '');
             title.style.display = 'none';
             searchContainer.style.display = 'none';
             notesContainer.style.display = 'none';
             newNoteBtn.style.display = 'none';
         } else {
+            // Expanded state - show border and all content
             sidebar.className = sidebar.className.replace('w-16', 'w-80');
+            if (!sidebar.className.includes('border-r')) {
+                sidebar.className += ' border-r border-warm-200';
+            }
             title.style.display = 'block';
             searchContainer.style.display = 'block';
             notesContainer.style.display = 'block';
@@ -306,6 +381,11 @@ class BearMarkApp {
         this.renderNotesList();
         this.renderEditor();
         this.renderHeader();
+        this.renderCalendarSidebar();
+        
+        // Apply sidebar states after render
+        this.applySidebarState();
+        this.applyCalendarSidebarState();
     }
 
     renderNotesList() {
@@ -319,7 +399,7 @@ class BearMarkApp {
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                     <p class="text-warm-500">No notes found</p>
-                    <button onclick="app.createNewNote()" class="mt-2 text-bear-600 hover:text-bear-700 text-sm font-medium">
+                    <button onclick="app.createNewNote()" class="mt-2 text-red-700 hover:text-red-800 text-sm font-medium">
                         Create your first note
                     </button>
                 </div>
@@ -329,12 +409,12 @@ class BearMarkApp {
         
         const notesHtml = this.filteredNotes.map(note => {
             const isSelected = this.selectedNote && this.selectedNote.id === note.id;
-            const selectedClass = isSelected ? 'bg-bear-50 border-r-2 border-bear-500' : '';
+            const selectedClass = isSelected ? 'bg-red-50 border-r-2 border-red-700' : '';
             const preview = note.content.substring(0, 100) + (note.content.length > 100 ? '...' : '');
             
             return `
                 <div onclick="app.selectNote(${JSON.stringify(note).replace(/"/g, '&quot;')})" 
-                     class="p-4 border-b border-warm-100 cursor-pointer hover:bg-warm-50 transition-colors ${selectedClass}">
+                     class="p-4 border-b border-warm-100 cursor-pointer hover:bg-red-50 transition-colors ${selectedClass}">
                     <h3 class="font-medium text-warm-900 mb-1 truncate">${note.title || 'Untitled'}</h3>
                     <p class="text-sm text-warm-600 line-clamp-2">${preview}</p>
                     <p class="text-xs text-warm-400 mt-2">${this.formatDate(note.updated_at || note.updatedAt)}</p>
@@ -463,7 +543,39 @@ class BearMarkApp {
                     content.scrollLeft = editorTextarea.scrollLeft;
                 }
             });
+            
+            // Handle blur effect - remove blur on focus/click
+            editorTextarea.addEventListener('focus', () => {
+                this.removeBlur();
+            });
+            
+            editorTextarea.addEventListener('click', () => {
+                this.removeBlur();
+            });
         }
+        
+        // Add blur effect on editor container hover
+        const editorContainer = document.getElementById('unified-editor');
+        if (editorContainer) {
+            editorContainer.addEventListener('mouseenter', () => {
+                this.removeBlur();
+            });
+            
+            editorContainer.addEventListener('mouseleave', () => {
+                // Only add blur back if textarea is not focused
+                if (editorTextarea && document.activeElement !== editorTextarea) {
+                    this.addBlur();
+                }
+            });
+        }
+        
+        // Handle blur when clicking outside editor
+        document.addEventListener('click', (e) => {
+            const unifiedEditor = document.getElementById('unified-editor');
+            if (unifiedEditor && !unifiedEditor.contains(e.target)) {
+                this.addBlur();
+            }
+        });
         
         // Delete button
         const deleteBtn = document.getElementById('delete-btn');
@@ -479,6 +591,69 @@ class BearMarkApp {
         const exportBtn = document.getElementById('export-btn');
         if (exportBtn) {
             exportBtn.addEventListener('click', () => this.exportNote());
+        }
+        
+        // Settings button
+        const settingsBtn = document.getElementById('settings-btn');
+        if (settingsBtn) {
+            settingsBtn.addEventListener('click', () => this.showSettings());
+        }
+        
+        // Settings modal close
+        const settingsClose = document.getElementById('settings-close');
+        if (settingsClose) {
+            settingsClose.addEventListener('click', () => this.hideSettings());
+        }
+        
+        // Settings save button
+        const settingsSave = document.getElementById('settings-save');
+        if (settingsSave) {
+            settingsSave.addEventListener('click', () => this.saveSettingsFromModal());
+        }
+        
+        // Settings reset button
+        const settingsReset = document.getElementById('settings-reset');
+        if (settingsReset) {
+            settingsReset.addEventListener('click', () => this.resetSettingsToDefaults());
+        }
+        
+        // Calendar enabled checkbox change
+        const calendarCheckbox = document.getElementById('calendar-enabled');
+        if (calendarCheckbox) {
+            calendarCheckbox.addEventListener('change', (e) => {
+                const connectSection = document.getElementById('calendar-connect-section');
+                if (connectSection) {
+                    connectSection.style.display = e.target.checked ? 'block' : 'none';
+                }
+            });
+        }
+        
+        // Calendar connect button in settings
+        const calendarConnectBtn = document.getElementById('calendar-connect-btn');
+        if (calendarConnectBtn) {
+            calendarConnectBtn.addEventListener('click', () => this.authenticateCalendar());
+        }
+        
+        // Calendar sidebar toggle (close button)
+        const calendarSidebarToggle = document.getElementById('calendar-sidebar-toggle');
+        if (calendarSidebarToggle) {
+            calendarSidebarToggle.addEventListener('click', () => {
+                // Instead of toggling, just close the calendar and update settings
+                this.settings.calendarEnabled = false;
+                this.calendarSidebarVisible = false;
+                this.applyCalendarSidebarState();
+                this.saveSettings();
+            });
+        }
+        
+        // Close settings modal when clicking outside
+        const settingsModal = document.getElementById('settings-modal');
+        if (settingsModal) {
+            settingsModal.addEventListener('click', (e) => {
+                if (e.target === settingsModal) {
+                    this.hideSettings();
+                }
+            });
         }
     }
 
@@ -742,6 +917,297 @@ class BearMarkApp {
             } catch {
                 return false;
             }
+        }
+    }
+
+    toggleCalendarSidebar() {
+        console.log('🔄 Toggling calendar sidebar. Current state:', this.calendarSidebarVisible);
+        this.calendarSidebarVisible = !this.calendarSidebarVisible;
+        console.log('📅 New calendar sidebar state:', this.calendarSidebarVisible);
+        
+        this.applyCalendarSidebarState();
+        this.saveSettings();
+        
+        // Load calendar events if becoming visible
+        if (this.calendarSidebarVisible) {
+            console.log('👀 Calendar becoming visible, loading events...');
+            this.loadCalendarEvents();
+        }
+    }
+
+    applyCalendarSidebarState() {
+        const calendarSidebar = document.getElementById('calendar-sidebar');
+        console.log('🎛️ Applying calendar sidebar state. Visible:', this.calendarSidebarVisible);
+        console.log('📱 Calendar sidebar element found:', !!calendarSidebar);
+        
+        if (calendarSidebar) {
+            const displayValue = this.calendarSidebarVisible ? 'flex' : 'none';
+            calendarSidebar.style.display = displayValue;
+            console.log('✅ Calendar sidebar display set to:', displayValue);
+        } else {
+            console.error('❌ Calendar sidebar element not found!');
+        }
+    }
+
+    async loadCalendarEvents() {
+        if (!window.googleCalendar) return;
+        
+        try {
+            // Check if authenticated
+            const isAuth = await window.googleCalendar.checkAuth();
+            this.renderCalendarAuth(isAuth);
+            
+            if (isAuth) {
+                const events = await window.googleCalendar.getTodaysEvents();
+                this.calendarEvents = events;
+                this.renderCalendarEvents();
+            }
+        } catch (error) {
+            console.error('Error loading calendar events:', error);
+        }
+    }
+
+    async authenticateCalendar() {
+        if (!window.googleCalendar) return;
+        
+        try {
+            const success = await window.googleCalendar.authenticate();
+            this.renderCalendarAuth(success);
+            
+            if (success) {
+                await this.loadCalendarEvents();
+            }
+        } catch (error) {
+            console.error('Error authenticating calendar:', error);
+            this.renderCalendarAuth(false);
+        }
+    }
+
+    renderCalendarSidebar() {
+        // This method will be called during render to ensure calendar sidebar is properly displayed
+        this.loadCalendarEvents();
+    }
+
+    renderCalendarAuth(isAuthenticated) {
+        const authStatus = document.getElementById('auth-status');
+        if (!authStatus) return;
+        
+        if (isAuthenticated) {
+            authStatus.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-green-600 font-medium">✅ Connected</span>
+                    <button 
+                        class="text-xs text-red-700 hover:text-red-800 underline disconnect-btn"
+                    >
+                        Disconnect
+                    </button>
+                </div>
+            `;
+            
+            // Add event listener to disconnect button
+            setTimeout(() => {
+                const disconnectBtn = authStatus.querySelector('.disconnect-btn');
+                if (disconnectBtn) {
+                    disconnectBtn.addEventListener('click', () => this.disconnectCalendar());
+                }
+            }, 0);
+        } else {
+            authStatus.innerHTML = `
+                <button 
+                    class="w-full px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors font-medium auth-btn"
+                >
+                    📅 Enable Calendar View
+                </button>
+                <p class="text-xs text-warm-500 mt-2 text-center">Click to show today's events</p>
+            `;
+            
+            // Add event listener to auth button
+            setTimeout(() => {
+                const authBtn = authStatus.querySelector('.auth-btn');
+                if (authBtn) {
+                    authBtn.addEventListener('click', () => this.authenticateCalendar());
+                }
+            }, 0);
+        }
+    }
+
+    renderCalendarEvents() {
+        const container = document.getElementById('calendar-events');
+        if (!container) return;
+        
+        if (!window.googleCalendar?.isAuthenticated) {
+            container.innerHTML = `
+                <div class="text-center text-warm-500 mt-8">
+                    Connect your Google Calendar to see today's events
+                </div>
+            `;
+            return;
+        }
+        
+        if (this.calendarEvents.length === 0) {
+            container.innerHTML = `
+                <div class="text-center text-warm-500 mt-8">
+                    <svg class="w-12 h-12 mx-auto mb-4 text-warm-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <p class="text-warm-500">No events today</p>
+                    <p class="text-xs text-warm-400 mt-2">Enjoy your free day!</p>
+                </div>
+            `;
+            return;
+        }
+        
+        const eventsHtml = this.calendarEvents.map(event => {
+            const isNow = window.googleCalendar.isEventNow(event);
+            const nowClass = isNow ? 'bg-red-50 border-l-4 border-red-700' : '';
+            const timeString = window.googleCalendar.formatEventTime(event);
+            
+            return `
+                <div class="p-3 border-b border-warm-100 ${nowClass}">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <h4 class="font-medium text-warm-900 text-sm mb-1">${event.summary || 'Untitled Event'}</h4>
+                            <p class="text-xs text-red-700 font-medium">${timeString}</p>
+                            ${event.location ? `<p class="text-xs text-warm-500 mt-1">📍 ${event.location}</p>` : ''}
+                        </div>
+                        ${isNow ? '<div class="w-2 h-2 bg-red-700 rounded-full mt-1 ml-2"></div>' : ''}
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        container.innerHTML = eventsHtml;
+    }
+
+    async disconnectCalendar() {
+        if (window.googleCalendar) {
+            await window.googleCalendar.clearAuth();
+            this.calendarEvents = [];
+            this.renderCalendarAuth(false);
+            this.renderCalendarEvents();
+            console.log('📅 Calendar disconnected by user');
+        }
+    }
+
+    // Settings Modal Methods
+    showSettings() {
+        this.settingsModalVisible = true;
+        const modal = document.getElementById('settings-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+            this.populateSettingsForm();
+        }
+    }
+
+    hideSettings() {
+        this.settingsModalVisible = false;
+        const modal = document.getElementById('settings-modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    populateSettingsForm() {
+        // Set calendar enabled checkbox
+        const calendarCheckbox = document.getElementById('calendar-enabled');
+        if (calendarCheckbox) {
+            calendarCheckbox.checked = this.settings.calendarEnabled;
+        }
+        
+        // Set auto-save checkbox
+        const autoSaveCheckbox = document.getElementById('auto-save-enabled');
+        if (autoSaveCheckbox) {
+            autoSaveCheckbox.checked = this.settings.autoSaveEnabled;
+        }
+        
+        // Set blur checkbox
+        const blurCheckbox = document.getElementById('blur-enabled');
+        if (blurCheckbox) {
+            blurCheckbox.checked = this.settings.blurEnabled;
+        }
+        
+        // Show/hide calendar connect section
+        const connectSection = document.getElementById('calendar-connect-section');
+        if (connectSection) {
+            connectSection.style.display = this.settings.calendarEnabled ? 'block' : 'none';
+        }
+        
+        // Update calendar auth status
+        this.updateCalendarAuthStatus();
+    }
+
+    updateCalendarAuthStatus() {
+        const statusElement = document.getElementById('calendar-auth-status');
+        if (statusElement && window.googleCalendar) {
+            const isConnected = window.googleCalendar.isAuthenticated;
+            statusElement.innerHTML = isConnected 
+                ? '<span class="text-green-600">📅 Calendar: Connected</span>'
+                : '<span class="text-warm-600">📅 Calendar: Not connected</span>';
+        }
+    }
+
+    async saveSettingsFromModal() {
+        // Get values from form
+        const calendarCheckbox = document.getElementById('calendar-enabled');
+        const autoSaveCheckbox = document.getElementById('auto-save-enabled');
+        const blurCheckbox = document.getElementById('blur-enabled');
+        
+        // Update settings
+        this.settings.calendarEnabled = calendarCheckbox?.checked || false;
+        this.settings.autoSaveEnabled = autoSaveCheckbox?.checked || true;
+        this.settings.blurEnabled = blurCheckbox?.checked || true;
+        
+        // Apply calendar setting
+        this.calendarSidebarVisible = this.settings.calendarEnabled;
+        this.applyCalendarSidebarState();
+        
+        // Apply blur setting
+        if (!this.settings.blurEnabled) {
+            this.removeBlur();
+        }
+        
+        // Save to storage
+        await this.saveSettings();
+        
+        // Hide modal
+        this.hideSettings();
+        
+        console.log('⚙️ Settings saved and applied:', this.settings);
+    }
+
+    resetSettingsToDefaults() {
+        this.settings = {
+            calendarEnabled: false,
+            autoSaveEnabled: true,
+            blurEnabled: true
+        };
+        
+        this.populateSettingsForm();
+        console.log('🔄 Settings reset to defaults');
+    }
+
+    addBlur() {
+        // Only add blur if enabled in settings
+        if (!this.settings.blurEnabled) return;
+        
+        const content = document.getElementById('editor-content');
+        const textarea = document.getElementById('editor-textarea');
+        if (content) {
+            content.classList.add('blurred-content');
+        }
+        if (textarea) {
+            textarea.classList.add('blurred-input');
+        }
+    }
+
+    removeBlur() {
+        const content = document.getElementById('editor-content');
+        const textarea = document.getElementById('editor-textarea');
+        if (content) {
+            content.classList.remove('blurred-content');
+        }
+        if (textarea) {
+            textarea.classList.remove('blurred-input');
         }
     }
 }

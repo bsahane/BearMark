@@ -2,6 +2,15 @@
 .cursor
 .agent-os
 
+# Temp files and user input scripts
+tmp.md
+userinput.py
+
+# Extension sensitive files
+extension.pem
+extension.crx
+extension/js/google-oauth.js
+
 # Node build artifacts
 node_modules/
 dist/
